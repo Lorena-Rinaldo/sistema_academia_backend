@@ -73,8 +73,6 @@ def login():
 
     return jsonify({"error": "Usuário e/ou senha inválidos"}), 401
 
-# ----- MÉTODOS PÚBLICOS -----
-
 # Rota 1 - Método GET - Retorna aluno pelo cpf
 @app.route("/alunos/<string:cpf>", methods=["GET"])
 def get_aluno(cpf):
