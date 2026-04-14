@@ -1,0 +1,261 @@
+openapi: 3.0.0
+info:
+  title: API Academia
+  description: API para gerenciamento de alunos de academia com autenticação JWT e integração Firebase Firestore
+  version: 1.0.0
+  contact:
+    name: Lorena Rinaldo e Isabelly Lima
+servers:
+  - url: http://localhost:5000
+    description: Servidor local
+paths:
+  /:
+    get:
+      summary: Raiz da API
+      tags:
+        - Info
+      responses:
+        '200':
+          description: Informações da API
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  api:
+                    type: string
+                  version:
+                    type: string
+                  author:
+                    type: string
+  /login:
+    post:
+      summary: Autenticação de administrador
+      tags:
+        - Autenticação
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - usuario
+                - senha
+              properties:
+                usuario:
+                  type: string
+                senha:
+                  type: string
+      responses:
+        '200':
+          description: Login bem-sucedido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  token:
+                    type: string
+        '400':
+          description: Dados inválidos
+        '401':
+          description: Credenciais inválidas
+  /alunos:
+    get:
+      summary: Listar todos os alunos (paginado)
+      tags:
+        - Alunos
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: limite
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: Lista de alunos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Aluno'
+    post:
+      summary: Criar novo aluno
+      tags:
+        - Alunos
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CriarAluno'
+      responses:
+        '201':
+          description: Aluno criado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Dados inválidos ou CPF inválido
+        '409':
+          description: CPF já cadastrado
+  /alunos/{cpf}:
+    get:
+      summary: Consultar aluno por CPF (público)
+      tags:
+        - Alunos
+      parameters:
+        - name: cpf
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dados do aluno
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nome:
+                    type: string
+                  status:
+                    type: string
+                  liberado:
+                    type: boolean
+                  mensagem:
+                    type: string
+        '404':
+          description: Aluno não encontrado
+    put:
+      summary: Atualizar aluno completamente
+      tags:
+        - Alunos
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cpf
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Aluno'
+      responses:
+        '200':
+          description: Aluno atualizado
+        '400':
+          description: Dados inválidos
+        '404':
+          description: Aluno não encontrado
+    patch:
+      summary: Atualizar aluno parcialmente
+      tags:
+        - Alunos
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cpf
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cpf:
+                  type: string
+                nome:
+                  type: string
+                status:
+                  type: string
+                  enum: [ativo, inativo]
+      responses:
+        '200':
+          description: Aluno atualizado
+        '400':
+          description: Dados inválidos
+        '404':
+          description: Aluno não encontrado
+    delete:
+      summary: Deletar aluno
+      tags:
+        - Alunos
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cpf
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Aluno deletado
+        '404':
+          description: Aluno não encontrado
+components:
+  schemas:
+    Aluno:
+      type: object
+      required:
+        - cpf
+        - nome
+        - status
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        cpf:
+          type: string
+          example: '123.456.789-00'
+        nome:
+          type: string
+          example: 'João Silva'
+        status:
+          type: string
+          enum: [ativo, inativo]
+          example: ativo
+    CriarAluno:
+      type: object
+      required:
+        - cpf
+        - nome
+      properties:
+        cpf:
+          type: string
+        nome:
+          type: string
+        status:
+          type: string
+          enum: [ativo, inativo]
+          default: ativo
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+
