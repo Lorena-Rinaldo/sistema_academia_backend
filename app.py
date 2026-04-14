@@ -174,7 +174,7 @@ def alunos_put(cpf):
 
     dados = request.get_json()
 
-    # PUT - É necessário enviar PERGUNTA e resposta
+    # PUT - É necessário enviar valores
     if not dados or "cpf" not in dados or "status" not in dados or "nome" not in dados:
         return jsonify({"error": "Dados inválidos ou incompletos"}), 400
 
@@ -203,7 +203,7 @@ def alunos_patch(cpf):
 
     dados = request.get_json()
 
-    # PATCH - Pode ter SÓ a PERGUNTA ou SÓ a RESPOSTA
+    # PATCH - Pode ter SÓ UM dos dados
     if not dados:
         return jsonify({"error": "Dados inválidos!"}), 400
 
