@@ -161,10 +161,10 @@ def post_alunos():
             }
         )
 
-        return (jsonify({"message": "Aluno(a)criado(a) com sucesso!"}), 201)
+        return jsonify({"message": "Aluno(a)criado(a) com sucesso!"}), 201
 
     except:
-        return (jsonify({"error": "Falha no envio do arquivo"}), 400)
+        return jsonify({"error": "Falha no envio do arquivo"}), 400
 
 
 # Rota 3 - Método PUT - Alteração total
