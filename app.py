@@ -79,18 +79,27 @@ def get_aluno(cpf):
     docs = db.collection("alunos").where("cpf", "==", cpf).limit(1).get()
     
     if not docs:
-        return jsonify({"error": "Aluno não encontrado"}), 404
+        return jsonify({"mensagem": "NÃO CADASTRADO"}), 404
     
     aluno = docs[0].to_dict()
 
     acesso_liberado = aluno.get("status", False)
     
-    return jsonify({
-        "nome": aluno.get("nome"),
-        "status": aluno.get("status"),
-        "liberado": acesso_liberado,
-        "mensagem": "BEM-VINDO(A)!" if acesso_liberado else "ACESSO NEGADO"
-    }), 200
+    if acesso_liberado:
+        return jsonify({
+            "nome": aluno.get("nome"),
+            "status": True,
+            "liberado": True,
+            "mensagem": "BEM-VINDO(A)!"
+        }), 200
+        
+    else:
+        return jsonify({
+            "nome": aluno.get("nome"),
+            "status": False,
+            "liberado": False,
+            "mensagem": "USUÁRIO INATIVO"
+        }), 200
 
 
 # ----- MÉTODOS PRIVADOS -----
