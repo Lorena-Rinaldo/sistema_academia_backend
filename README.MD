@@ -66,8 +66,8 @@ Para rodar a API localmente:
 2.  **Configure variáveis de ambiente (.env):**
     ```
     SECRET_KEY=sua_chave_secreta
-    ADM_USUARIO=admin
-    ADM_SENHA=123456
+    ADM_USUARIO= seu_admin_usuario
+    ADM_SENHA= sua_senha
     FIREBASE_CREDENTIALS='{"type":"service_account",...}'  # Ou firebase.json local
     ```
 
