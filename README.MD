@@ -2,6 +2,8 @@
 
 Bem-vindo ao **Sistema de Gerenciamento de Academia**! Uma API RESTful robusta desenvolvida em Flask para controle completo de alunos, com autenticação JWT segura, integração com Firebase Firestore e documentação OpenAPI interativa. Gerencie cadastros, status de acesso (ativo/inativo) e consultas públicas por CPF!
 
+- Vercel: https://sistema-academia-backend.vercel.app/
+
 ## Índice
 
 *   [Sobre o Projeto](#sobre-o-projeto)
